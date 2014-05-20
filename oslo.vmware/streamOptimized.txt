@@ -1,0 +1,22 @@
+# Disk DescriptorFile
+version=1
+encoding="windows-1252"
+CID=f19b298e
+parentCID=ffffffff
+createType="streamOptimized"
+
+# Extent description
+RW 16777216 SPARSE "test.vmdk"
+
+# The Disk Data Base
+#DDB
+ddb.geometry.biosSectors = "63"
+ddb.geometry.biosHeads = "255"
+ddb.geometry.biosCylinders = "1044"
+ddb.adapterType = "lsilogic"
+ddb.geometry.sectors = "63"
+ddb.geometry.heads = "255"
+ddb.geometry.cylinders = "1044"
+ddb.uuid = "60 00 C2 9f 9b b0 9d 17-15 6c 54 9c 40 8d 33 71"
+ddb.virtualHWVersion = "7"
+ddb.toolsVersion = "0"

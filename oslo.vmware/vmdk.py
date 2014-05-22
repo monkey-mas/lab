@@ -8,7 +8,7 @@ class API(object):
         """Return string of adapater type defined in a VMDK file
 
         Param vmdk is handled properly for both local files and http sources.
-        Currently assuming format of VMDK file is valid
+        Currently assuming path and format of VMDK file is valid
         e.g) no missing fields
 
         :param vmdk: file path of VMDK file
@@ -42,7 +42,7 @@ class API(object):
         """Return string of disk type defined in a VMDK file
 
         Param vmdk is handled properly for both local files and http sources.
-        Currently assuming format of VMDK file is valid
+        Currently assuming path and format of VMDK file is valid
         e.g) no missing fields
 
         :param vmdk: file path of VMDK file
@@ -78,7 +78,7 @@ class API(object):
         """Return string of virtual size defined in a VMDK file
 
         Param vmdk is handled properly for both local files and http sources.
-        Currently assuming format of VMDK file is valid
+        Currently assuming path and format of VMDK file is valid
         e.g) no missing fields
 
         :param vmdk: file path of VMDK file

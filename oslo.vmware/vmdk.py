@@ -89,7 +89,7 @@ class API(object):
             for line in file:
                 if line == '# Extent description\n':
                     # description format => '<accesstype>[space]<size>[space]' 
-                    description = f.next()
+                    description = file.next()
                     size        = description.split()[1]
                     return size
 

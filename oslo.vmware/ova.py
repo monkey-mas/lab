@@ -28,5 +28,5 @@ class OVA(object):
 					if found_ovf and found_root_vmdk:
 						break
 
-			#finish downloading to avoid extract unnecessary files
+			#finish downloading to avoid extracting unnecessary files
 			break

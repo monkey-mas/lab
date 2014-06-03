@@ -27,6 +27,6 @@ class OVA(object):
 
                     if found_ovf and found_root_vmdk:
                         break
-
+                break # may be necessary to finish dealing with tar file???
             #finish downloading to avoid extracting unnecessary files
             break

@@ -31,8 +31,9 @@ class OVA(object):
                 header = ovafile.read(blocksize)
                 info = tarfile.TarInfo.frombuf(header)
                 filesize = info.size
+                file_format = info.name.split('.')[-1]
 
-                if info.name.endswith(('ovf', 'vmdk')):
+                if file_format in ('ovf', 'vmdk'):
                     s = io.BytesIO()
 
                     while filesize > chunksize:
@@ -42,11 +43,11 @@ class OVA(object):
                     buf = ovafile.read(filesize)
                     s.write(buf)
 
-                    if info.name.endswith(('ovf')):
-                        ret_data['ovf'] = s.getvalue()
+                    ret_data[file_format] = s.getvalue()
+
+                    if file_format == 'ovf':
                         found_ovf = True
-                    if info.name.endswith(('vmdk')):
-                        ret_data['vmdk'] = s.getvalue()
+                    if file_format == 'vmdk':
                         found_root_vmdk = True
                 else:
                     while filesize > chunksize:

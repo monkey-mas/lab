@@ -5,7 +5,7 @@ import tarfile
 import tempfile
 import unittest
 
-class OVATest(unittest.TestCase):
+class APITest(unittest.TestCase):
     """Tests for OVA"""
 
     @mock.patch('httplib.HTTPConnection')
@@ -36,7 +36,7 @@ class OVATest(unittest.TestCase):
                 fake_urllib2.urlopen.return_value = ova_file
                 ova.urllib2.urlopen = fake_urllib2.urlopen
 
-                ova_obj = ova.OVA()
+                ova_obj = ova.API()
                 ret_data = ova_obj.get_ovf_and_root_vmdk(fake_url)
 
         for key in ret_data.keys():

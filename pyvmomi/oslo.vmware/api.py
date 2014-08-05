@@ -32,8 +32,7 @@ from oslo.vmware.openstack.common.gettextutils import _, _LE, _LI, _LW
 from oslo.vmware import pbm
 from oslo.vmware import vim
 from oslo.vmware import vim_util
-# from pyvmomi
-from pyVim.connect import SmartConnect, Disconnect
+
 
 LOG = logging.getLogger(__name__)
 
@@ -184,10 +183,14 @@ class VMwareAPISession(object):
     @property
     def vim(self):
         if not self._vim:
-            self._vim = vim.Vim(protocol=self._scheme,
-                                host=self._host,
-                                port=self._port,
-                                wsdl_url=self._vim_wsdl_loc)
+            #self._vim = vim.Vim(protocol=self._scheme,
+            #                    host=self._host,
+            #                    port=self._port,
+            #                    wsdl_url=self._vim_wsdl_loc)
+            self._vim = SmartConnect(host=self._host,
+                                     user=self._server_username,
+                                     pwd=self._ser_password,
+                                     port=self._port))
         return self._vim
 
     @property

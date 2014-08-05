@@ -32,7 +32,7 @@ from oslo.vmware.openstack.common.gettextutils import _, _LE, _LI, _LW
 from oslo.vmware import pbm
 from oslo.vmware import vim
 from oslo.vmware import vim_util
-from pyVim.connect import SmartConnect
+from pyVim.connect import SmartConnect, Disconnect
 
 LOG = logging.getLogger(__name__)
 
@@ -257,7 +257,8 @@ class VMwareAPISession(object):
                          "with ID = %s."),
                      _trunc_id(self._session_id))
             try:
-                self.vim.Logout(self.vim.service_content.sessionManager)
+                #self.vim.Logout(self.vim.service_content.sessionManager)
+                Disconnect(self.vim)
                 self._session_id = None
             except Exception:
                 LOG.exception(_LE("Error occurred while logging out and "

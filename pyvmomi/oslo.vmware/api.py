@@ -238,8 +238,9 @@ class VMwareAPISession(object):
             try:
                 LOG.info(_LI("Terminating the previous session with ID = %s"),
                          _trunc_id(prev_session_id))
-                self.vim.TerminateSession(session_manager,
-                                          sessionId=[prev_session_id])
+                #self.vim.TerminateSession(session_manager,
+                #                          sessionId=[prev_session_id])
+                session_manager.TerminateSession(sessionId=[prev_session_id])
             except Exception:
                 # This exception is something we can live with. It is
                 # just an extra caution on our side. The session might

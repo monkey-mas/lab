@@ -210,12 +210,17 @@ class VMwareAPISession(object):
     @RetryDecorator(exceptions=(exceptions.VimConnectionException,))
     def _create_session(self):
         """Establish session with the server."""
-        session_manager = self.vim.service_content.sessionManager
+        #session_manager = self.vim.service_content.sessionManager
+        session_manager = self.vim.RetrieveContent().sessionManager
         # Login and create new session with the server for making API calls.
         LOG.debug("Logging in with username = %s.", self._server_username)
-        session = self.vim.Login(session_manager,
-                                 userName=self._server_username,
-                                 password=self._server_password)
+        #session = self.vim.Login(session_manager,
+        #                         userName=self._server_username,
+        #                         password=self._server_password)
+        # TODO(massa): Fix Login(...)
+        #              Currently, invalid.Login happens with the two arguments
+        session = session_manager.Login(userName=self._server_username,
+                                        password=self._server_password)
         prev_session_id, self._session_id = self._session_id, session.key
         # We need to save the username in the session since we may need it
         # later to check active session. The SessionIsActive method requires

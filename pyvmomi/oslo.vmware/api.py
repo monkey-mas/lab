@@ -362,10 +362,14 @@ class VMwareAPISession(object):
 
         is_active = False
         try:
-            is_active = self.vim.SessionIsActive(
-                self.vim.service_content.sessionManager,
-                sessionID=self._session_id,
-                userName=self._session_username)
+            #is_active = self.vim.SessionIsActive(
+            #    self.vim.service_content.sessionManager,
+            #    sessionID=self._session_id,
+            #    userName=self._session_username)
+            session_manager = self.vim.RetrieveContent().sessionManager
+            is_active = session_manager.SessionIsActive(
+                            sessionID=self._session_id,
+                            userName=self._session_username)
         except exceptions.VimException:
             LOG.warn(_LW("Error occurred while checking whether the "
                          "current session: %s is active."),

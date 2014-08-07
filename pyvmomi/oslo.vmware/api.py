@@ -189,7 +189,7 @@ class VMwareAPISession(object):
             #                    wsdl_url=self._vim_wsdl_loc)
             self._vim = SmartConnect(host=self._host,
                                      user=self._server_username,
-                                     pwd=self._ser_password,
+                                     pwd=self._server_password,
                                      port=self._port)
         return self._vim
 

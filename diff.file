@@ -1,0 +1,97 @@
+diff --git a/oslo/vmware/api.py b/oslo/vmware/api.py
+index a24aea5..232aec1 100644
+--- a/oslo/vmware/api.py
++++ b/oslo/vmware/api.py
+@@ -32,7 +32,7 @@ from oslo.vmware.openstack.common.gettextutils import _, _LE, _LI, _LW
+ from oslo.vmware import pbm
+ from oslo.vmware import vim
+ from oslo.vmware import vim_util
+-
++from PyVim.connect import SmartConnect, Disconnect
+ 
+ LOG = logging.getLogger(__name__)
+ 
+@@ -184,10 +184,10 @@ class VMwareAPISession(object):
+     @property
+     def vim(self):
+         if not self._vim:
+-            self._vim = vim.Vim(protocol=self._scheme,
+-                                host=self._host,
+-                                port=self._port,
+-                                wsdl_url=self._vim_wsdl_loc)
++	    self._vim = SmartConnect(host=self._host,
++				     user=self._server_username,
++				     pwd=self._server_password,
++				     port=self._port)
+         return self._vim
+ 
+     @property
+@@ -207,12 +207,11 @@ class VMwareAPISession(object):
+     @RetryDecorator(exceptions=(exceptions.VimConnectionException,))
+     def _create_session(self):
+         """Establish session with the server."""
+-        session_manager = self.vim.service_content.sessionManager
++	session_manager = self.vim.RetrieveContent().sessionManager
+         # Login and create new session with the server for making API calls.
+         LOG.debug("Logging in with username = %s.", self._server_username)
+-        session = self.vim.Login(session_manager,
+-                                 userName=self._server_username,
+-                                 password=self._server_password)
++	session = session_manager.Login(userName=self._server_username,
++					password=self._server_password)
+         prev_session_id, self._session_id = self._session_id, session.key
+         # We need to save the username in the session since we may need it
+         # later to check active session. The SessionIsActive method requires
+@@ -230,8 +229,7 @@ class VMwareAPISession(object):
+             try:
+                 LOG.info(_LI("Terminating the previous session with ID = %s"),
+                          _trunc_id(prev_session_id))
+-                self.vim.TerminateSession(session_manager,
+-                                          sessionId=[prev_session_id])
++                session_manager.TerminateSession(sessionId=[prev_session_id])
+             except Exception:
+                 # This exception is something we can live with. It is
+                 # just an extra caution on our side. The session might
+@@ -253,8 +251,8 @@ class VMwareAPISession(object):
+             LOG.info(_LI("Logging out and terminating the current session "
+                          "with ID = %s."),
+                      _trunc_id(self._session_id))
+-            try:
+-                self.vim.Logout(self.vim.service_content.sessionManager)
++      	    try:
++                Disconnect(self.vim)
+                 self._session_id = None
+             except Exception:
+                 LOG.exception(_LE("Error occurred while logging out and "
+diff --git a/oslo/vmware/vim_util.py b/oslo/vmware/vim_util.py
+index e3f8c2e..9932f87 100644
+--- a/oslo/vmware/vim_util.py
++++ b/oslo/vmware/vim_util.py
+@@ -274,6 +274,8 @@ def get_objects(vim, type_, max_objects, properties_to_collect=None,
+                                                       [object_spec])
+     options = client_factory.create('ns0:RetrieveOptions')
+     options.maxObjects = max_objects
++    print 'specSet:', specSet=[property_fileter_spec]
++    print 'options:', options
+     return vim.RetrievePropertiesEx(vim.service_content.propertyCollector,
+                                     specSet=[property_filter_spec],
+                                     options=options)
+@@ -308,6 +310,9 @@ def get_object_properties(vim, moref, properties_to_collect):
+ 
+     options = client_factory.create('ns0:RetrieveOptions')
+     options.maxObjects = 1
++    print 'in get_all_properties'
++    print 'property_fileter_spec', property_filteer_spec
++    print 'options:', options
+     retrieve_result = vim.RetrievePropertiesEx(
+         vim.service_content.propertyCollector,
+         specSet=[property_filter_spec],
+@@ -334,6 +339,8 @@ def cancel_retrieval(vim, retrieve_result):
+              VimSessionOverLoadException, VimConnectionException
+     """
+     token = _get_token(retrieve_result)
++    print 'in cancel_retrieval'
++    print 'token : ', token
+     if token:
+         collector = vim.service_content.propertyCollector
+         vim.CancelRetrievePropertiesEx(collector, token=token)
